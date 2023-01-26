@@ -19,7 +19,7 @@ export function CheckBox({ title, completed = false, disabled = false, ...rest }
   return (
     <RadixCheckBox.Root 
       {...rest}
-      className="flex flex-row items-center gap-3 group" 
+      className="flex flex-row items-center gap-3 group focus:outline-none disabled:cursor-not-allowed" 
       checked={isChecked}
       onCheckedChange={() => {
         toggleChecked()
@@ -28,7 +28,7 @@ export function CheckBox({ title, completed = false, disabled = false, ...rest }
       disabled={disabled}
     >
       <div 
-        className="w-8 h-8 rounded-lg flex items-center justify-center border bg-zinc-800 border-zinc-900 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500"
+        className="w-8 h-8 rounded-lg flex items-center justify-center border bg-zinc-800 border-zinc-900 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500 transition-all group-focus:ring-2 group-focus:ring-violet-700 group-focus:ring-offset-2 group-focus:ring-offset-[#09090A]"
       >
         <RadixCheckBox.Indicator>
           <Check 
