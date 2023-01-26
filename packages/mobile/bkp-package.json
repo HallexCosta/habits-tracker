@@ -1,0 +1,35 @@
+{
+  "name": "mobile",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@expo-google-fonts/inter": "^0.2.2",
+    "@expo/metro-config": "*",
+    "@expo/vector-icons": "*",
+    "@expo/webpack-config": "*",
+    "@nrwl/expo": "*",
+    "@nrwl/react": "*",
+    "@testing-library/jest-native": "*",
+    "@testing-library/react-native": "*",
+    "@types/react": "~18.0.24",
+    "@types/react-native": "~0.70.6",
+    "dayjs": "^1.11.7",
+    "expo": "*",
+    "expo-font": "~11.0.1",
+    "nativewind": "^2.0.11",
+    "react": "*",
+    "react-native": "*",
+    "react-native-svg": "13.4.0",
+    "react-native-svg-transformer": "*",
+    "react-native-web": "*",
+    "typescript": "^4.6.3"
+  },
+  "scripts": {
+    "eas-build-pre-install": "cd ../../ && cp package-lock.json ./packages/mobile/",
+    "postinstall": "rm -r node_modules && cd ../../ && npm install && npx nx sync-deps mobile && npx nx ensure-symlink mobile"
+  },
+  "devDependencies": {
+    "react-native-svg-transformer": "^1.0.0",
+    "tailwindcss": "^3.2.4"
+  }
+}
