@@ -1,5 +1,6 @@
 import clsx from "clsx"
 import dayjs from "dayjs"
+import { useEffect } from "react"
 import { Alert, Dimensions, TouchableOpacity, TouchableOpacityProps } from "react-native"
 import colors from "tailwindcss/colors"
 import { generateProgressPercentage } from "../utils/generate-progress-percentage"
@@ -26,12 +27,13 @@ export function HabitDay({ amountCompleted = 0, amountOfHabbits = 0, date, ...re
     <TouchableOpacity 
       {...rest}
       className={clsx('rounded-lg border-2 m-1', {
-        'bg-violet-600 border-violet-600': amountAccomplishedPercentage <= 100,
-        'bg-violet-700 border-violet-600': amountAccomplishedPercentage <= 75,
-        'bg-violet-800 border-violet-700': amountAccomplishedPercentage <= 50,
-        'bg-violet-900 border-violet-800': amountAccomplishedPercentage <= 25,
+        'bg-violet-900/80 border-violet-900/25': amountAccomplishedPercentage <= 100,
+        'bg-violet-800/80 border-violet-800/25': amountAccomplishedPercentage <= 80,
+        'bg-violet-700/80 border-violet-700/25': amountAccomplishedPercentage <= 60,
+        'bg-violet-600/80 border-violet-600/25': amountAccomplishedPercentage <= 40,
+        'bg-violet-500/80 border-violet-500/25': amountAccomplishedPercentage <= 20,
         'bg-zinc-900 border-zinc-800': amountAccomplishedPercentage === 0,
-        'border-4 border-indigo-500/75': isCurrentDate
+        'border-4 border-blue-900': isCurrentDate
       })}
       style={{ width: DAY_SIZE, height: DAY_SIZE }}
       activeOpacity={.7}

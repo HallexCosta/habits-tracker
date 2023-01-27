@@ -3,36 +3,40 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "nativewind": "*",
-    "dayjs": "*",
     "@expo-google-fonts/inter": "*",
-    "expo-font": "*",
     "@expo/metro-config": "*",
+    "@expo/vector-icons": "*",
     "@expo/webpack-config": "*",
     "@nrwl/expo": "*",
+    "@nrwl/react": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/native-stack": "*",
     "@testing-library/jest-native": "*",
     "@testing-library/react-native": "*",
+    "@types/react": "*",
+    "@types/react-native": "*",
+    "axios": "*",
+    "clsx": "*",
+    "dayjs": "*",
     "expo": "*",
+    "expo-font": "*",
+    "nativewind": "*",
     "react": "*",
     "react-native": "*",
     "react-native-svg": "*",
+    "react-native-svg-transformer": "*",
     "react-native-web": "*",
     "tailwindcss": "*",
-    "@types/react": "*",
-    "@types/react-native": "*",
-    "react-native-svg-transformer": "*",
-    "typescript": "*",
-    "@expo/vector-icons": "*",
-    "@nrwl/react": "*"
+    "typescript": "*"
   },
   "scripts": {
     "postinstall": "rm -r node_modules && cd ../../ && npm install && npx nx sync-deps mobile && npx nx ensure-symlink mobile"
   },
   "devDependencies": {
-    "tailwindcss": "*",
     "@types/react": "*",
     "@types/react-native": "*",
     "react-native-svg-transformer": "*",
+    "tailwindcss": "*",
     "typescript": "*"
   }
 }
