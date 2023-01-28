@@ -28,7 +28,7 @@
 </details>
 
 <details>
-  <summary>List habits by date<summary>
+  <summary>List habits by date</summary>
 
   ### List habits by date
   **Endpoint**: GET /days  
@@ -53,10 +53,10 @@
     ]
   }
   ```
-<details>
+</details>
 
 <details>
-  <summary>Toggle habit<summary>
+  <summary>Toggle habit</summary>
 
   ### Toggle habit
   **Endpoint**: PATCH /habits/:habitId/toggle  
@@ -67,10 +67,10 @@
   **Response**:  
   Status: 200 Ok  
   Body: **No body**
-<details>
+</details>
 
 <details>
-  <summary>Get summary<summary>
+  <summary>Get summary</summary>
 
   ### Get summary
   **Endpoint**: GET /summary  
@@ -81,4 +81,4 @@
   **Response**:  
   Status: 200 Ok  
   Body: **No body**  
-<details>
+</details>
