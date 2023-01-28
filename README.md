@@ -7,26 +7,16 @@ or non-completed changing the colors tone acoordingly with progress of user.
 
 ### Technologies used
 
-- [x] [Typescript](https://typescriptlang.org)
-> For add types to javascript
-- [x] [Expo](https://expo.dev)
-> For create react native project app
-- [x] [React Reanimated](https://docs.swmansion.com/react-native-reanimated/)
-> For create animation in check box and progress bar in React Native
-- [x] [TailwindCSS](https://tailwindcss.com/)
-> For create styles of pages, utilizing framework css that following pattern of utility-first
-- [x] [Nativewind](https://nativewind.dev)
-> For create styles of screens equals TailwindCSS from Web to React Native
-- [x] [Vite](https://vite.dev)
-> For create react webapp
-- [x] [Radix](https://radix-ui.com)
-> For accessibility of elements from HTML, for the sensors of write identify the content of page
-- [x] [Fastify](https://fastify.io)
-> For create server API and define the enpoints
-- [x] [Prisma](https://prisma.io)
-> For create migrations, database SQLite and persists data on database
-- [x] [Nx](https://nx.dev)
-> I'm chosen Nx to seen how it tool work like build system, together with monorepo architecture
+- [x] [Typescript](https://typescriptlang.org) (For add types to javascript)
+- [x] [Expo](https://expo.dev) (For create react native project app)
+- [x] [React Reanimated](https://docs.swmansion.com/react-native-reanimated/) (For create animation in check box and progress bar in React Native)
+- [x] [TailwindCSS](https://tailwindcss.com/) (For create styles of pages, utilizing framework css that following pattern of utility-first)
+- [x] [Nativewind](https://nativewind.dev) (For create styles of screens equals TailwindCSS from Web to React Native)
+- [x] [Vite](https://vite.dev) (For create react webapp)
+- [x] [Radix](https://radix-ui.com) (For accessibility of elements from HTML, for the sensors of write identify the content of page)
+- [x] [Fastify](https://fastify.io) (For create server API and define the enpoints)
+- [x] [Prisma](https://prisma.io) (For create migrations, database SQLite and persists data on database)
+- [x] [Nx](https://nx.dev) (I'm chosen Nx to seen how it tool work like build system, together with monorepo architecture)
 
 ### Future Features
 
@@ -51,6 +41,5 @@ For access info and descriptions of endpoints from API click to [here](./docs/EN
 ![Splash Screen](./docs/images/mobile/splash.png)
 ![Create New Habit Screen](./docs/images/mobile/new-habit.png)
 ![Specific Day Screen](./docs/images/mobile/specific-day.png)
-![Specific Day without Habits Screen](./docs/images/mobile/specific-day (no habits).png)
-
+![Specific Day without Habits Screen](./docs/images/mobile/specific-day \(no habits\).png)
 
