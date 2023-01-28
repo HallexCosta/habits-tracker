@@ -1,6 +1,6 @@
 # NLW Setup - Habits
 
-Project developed by [Hállex Costa](https://github.com/hallexcosta) together with instructor [Diego Fernades](https://github.com/diego3g) and [Rodrigo Gonçalves](https://github.com/rodrigorgtic)
+Project developed by [Hállex Costa](https://github.com/hallexcosta) together with instructors [Diego Fernades](https://github.com/diego3g) and [Rodrigo Gonçalves](https://github.com/rodrigorgtic)
   
 The project is a Habit Tracker, that allow a user to create a new Habit and see your summary of habits completed 
 or non-completed changing the colors tone acoordingly with progress of user.
