@@ -41,5 +41,5 @@ For access info and descriptions of endpoints from API click to [here](./docs/EN
 ![Splash Screen](./docs/images/mobile/splash.png)
 ![Create New Habit Screen](./docs/images/mobile/new-habit.png)
 ![Specific Day Screen](./docs/images/mobile/specific-day.png)
-![Specific Day without Habits Screen](./docs/images/mobile/specific-day \(no habits\).png)
+![Specific Day without Habits Screen](./docs/images/mobile/specific-day-without-no-habits.png)
 
