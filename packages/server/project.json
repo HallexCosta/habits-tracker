@@ -14,22 +14,10 @@
         "assets": ["packages/server/src/assets"]
       }
     },
-    "start": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsx watch ./packages/server/src/main.ts"
-      }
-    },
     "serve": {
-      "executor": "@nrwl/js:tsc",
       "executor": "nx:run-commands",
       "options": {
         "command": "tsx watch ./packages/server/src/main.ts"
-      },
-      "configurations": {
-        "production": {
-          "buildTarget": "server:build:production"
-        }
       }
     },
     "lint": {
