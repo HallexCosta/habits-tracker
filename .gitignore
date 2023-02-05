@@ -56,3 +56,5 @@ cache/
 
 packages/mobile-e2e/artifacts
 packages/teste-expo-e2e/artifacts
+
+packages/**/.env
