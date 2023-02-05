@@ -2,10 +2,7 @@
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^9.3.0",
     "prisma-erd-generator": "^1.2.5",
-    "tsx": "^3.12.2"
-  },
-  "prisma": {
-    "seed": "tsx ./prisma/seed.ts"
+    "tsx": "*"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
