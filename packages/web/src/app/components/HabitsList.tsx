@@ -1,7 +1,12 @@
-import dayjs from "dayjs"
-import { useState, useEffect } from "react"
-import { api, DayResponseAPI, HTTPResponse } from "../../lib/axios"
-import { CheckBox } from "./CheckBox"
+import { AxiosResponse } from 'axios'
+import dayjs from 'dayjs'
+import { useState, useEffect } from 'react'
+import { api } from '../../lib/axios'
+import { Day } from '../domains/day'
+import { AxiosResponseSuccessAdapter } from '../../lib/axios/axios-interceptor-response-adapter'
+import { getLocalStorageData } from '../utils/get-local-storage-data'
+
+import { CheckBox } from './CheckBox'
 
 interface HabitsListProps {
   date: Date
@@ -11,28 +16,36 @@ interface HabitsListProps {
 export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
   const defaultDay = {
     possibleHabits: [],
-    completedHabits: []
+    completedHabits: [],
   }
 
-  const [day, setDay] = useState<DayResponseAPI>(defaultDay)
+  const [loading, setLoading] = useState(true)
+  const [day, setDay] = useState<Day>(defaultDay)
 
   const currentDate = new Date()
   const dateEndOfDay = dayjs(date).endOf('day')
   const isDateInPast = dateEndOfDay.isBefore(currentDate)
 
   async function handleToggleHabit(habitId: string) {
-    console.log('handleToggleHabit')
+    const { token } = getLocalStorageData<UserLogged>('userLogged')
+
     const url = `/habits/${habitId}/toggle`
-    await api.patch(url)
+    const noBody = {}
+    await api.patch(url, noBody, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    })
 
     const isHabitAlreadyCompleted = day.completedHabits.includes(habitId)
 
-    setDay(prevDay => {
+    setDay((prevDay) => {
       let completedHabits: string[] = [...prevDay.completedHabits, habitId]
 
       if (isHabitAlreadyCompleted) {
-        completedHabits =  prevDay.completedHabits
-          .filter(completedHabitId => !completedHabitId.includes(habitId))
+        completedHabits = prevDay.completedHabits.filter(
+          (completedHabitId) => !completedHabitId.includes(habitId)
+        )
       }
 
       // up progress bar
@@ -40,43 +53,59 @@ export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
 
       return {
         possibleHabits: prevDay.possibleHabits,
-        completedHabits
+        completedHabits,
       }
     })
   }
 
   useEffect(() => {
-    api.get<DayResponseAPI>('days', {
-      params: {
-        date: date.toISOString()
-      }
-    })
-    .then((response: HTTPResponse<DayResponseAPI>) => {
-      console.log(response.data)
-      setDay(response.data)
-    })
-  }, [])
+    const { token } = getLocalStorageData<UserLogged>('userLogged')
 
+    const getDayURL = `days`
+    api
+      .get<Day>(getDayURL, {
+        params: {
+          date: date.toISOString(),
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response: AxiosResponseSuccessAdapter<Day>) => {
+        setDay(response.data)
+        setLoading(false)
+      })
+  }, [date])
 
   return (
     <div className="mt-6 flex flex-col gap-3">
-      {day.possibleHabits.length == 0 && (
-        <h2 className="w-64 text-white text-3xl font-bold leading-tight">Não há hábitos nesses dias</h2>
+      {loading && (
+        <h2 className="w-64 text-white text-3xl font-bold leading-tight">
+          Carregando...
+        </h2>
       )}
 
-      {day.possibleHabits.map(possibleHabit => {
-        const isCompletedHabit = day.completedHabits.includes(possibleHabit.id)
+      {!loading && day.possibleHabits.length === 0 ? (
+        <h2 className="w-64 text-white text-3xl font-bold leading-tight">
+          Não há hábitos nesses dias
+        </h2>
+      ) : (
+        day.possibleHabits.map((possibleHabit) => {
+          const isCompletedHabit = day.completedHabits.includes(
+            possibleHabit.id
+          )
 
-        return (
-          <CheckBox 
-            key={possibleHabit.id}
-            completed={isCompletedHabit}
-            title={possibleHabit.title}
-            disabled={isDateInPast}
-            onCheckedChange={() => handleToggleHabit(possibleHabit.id)}
-          />
-        )
-      })}
+          return (
+            <CheckBox
+              key={possibleHabit.id}
+              completed={isCompletedHabit}
+              title={possibleHabit.title}
+              disabled={isDateInPast}
+              onCheckedChange={() => handleToggleHabit(possibleHabit.id)}
+            />
+          )
+        })
+      )}
     </div>
   )
 }
