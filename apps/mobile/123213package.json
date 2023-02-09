@@ -1,0 +1,41 @@
+{
+  "name": "mobile",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@expo-google-fonts/inter": "*",
+    "@expo/metro-config": "*",
+    "@expo/vector-icons": "*",
+    "@expo/webpack-config": "*",
+    "@nrwl/expo": "*",
+    "@nrwl/react": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/native-stack": "*",
+    "@testing-library/jest-native": "*",
+    "@testing-library/react-native": "*",
+    "@types/react": "*",
+    "@types/react-native": "*",
+    "axios": "*",
+    "clsx": "*",
+    "dayjs": "*",
+    "expo": "*",
+    "expo-font": "*",
+    "nativewind": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-svg": "*",
+    "react-native-svg-transformer": "*",
+    "react-native-web": "*",
+    "tailwindcss": "*",
+    "typescript": "*"
+  },
+  "scripts": {
+  },
+  "devDependencies": {  
+    "@types/react": "*",
+    "@types/react-native": "*",
+    "react-native-svg-transformer": "*",
+    "tailwindcss": "*",
+    "typescript": "*"
+  }
+}

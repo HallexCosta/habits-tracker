@@ -22,7 +22,7 @@ or non-completed changing the colors tone acoordingly with progress of user.
 
 - [ ] Notifications on Web
 - [ ] Notifications on Mobile
-- [ ] Authenticate with [Firebase](https://console.firebase.google.com) or [Nhost](https://nhost.io)
+- [x] Authenticate with [Firebase](https://console.firebase.google.com) or [Nhost](https://nhost.io)
 - [ ] Deploy API on [Render](https://render.com)
 - [ ] Deploy Web on [Netlify](https://netlify.com), [Vercel](https://vercel.com) or [Render](https://render.com)
 - [ ] Apply Clean Architecture on Frontend
