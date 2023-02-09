@@ -26,6 +26,7 @@ export function SummaryTable({ isOpenModal }: SummaryTableProps) {
     if (!isOpenModal) {
       console.log('Estou buscando o usuário')
       const { token } = getLocalStorageData<UserLogged>('userLogged')
+      console.log(token)
 
       api
         .get<Summary>('/summary', {
@@ -33,9 +34,11 @@ export function SummaryTable({ isOpenModal }: SummaryTableProps) {
             authorization: `Bearer ${token}`,
           },
         })
-        .then((response: AxiosResponseSuccessAdapter<Summary>) =>
+        .then((response: AxiosResponseSuccessAdapter<Summary>) => {
+          console.log(response)
           setSummary(response.data)
-        )
+        })
+        .catch((e) => console.log(e))
     }
   }, [isOpenModal])
 

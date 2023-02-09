@@ -87,10 +87,13 @@ export function SignInModal({ onChangeIsOpenModal }: SignInModalProps) {
       })
 
       if (createUserResponse.ok) {
-        JSON.stringify({
-          user: authUserResponse.data.user,
-          token,
-        })
+        localStorage.setItem(
+          'userLogged',
+          JSON.stringify({
+            user: authUserResponse.data.user,
+            token,
+          })
+        )
         setOpenModal(false)
         onChangeIsOpenModal(false)
         alert('Sucesso no login - usuário criado')
