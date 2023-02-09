@@ -7,7 +7,7 @@ import {
 } from 'axios'
 
 export interface AxiosResponseErrorAdapter {
-  ok: false
+  ok: boolean
   data?: any
   status?: number
   statusText?: string
@@ -17,7 +17,7 @@ export interface AxiosResponseErrorAdapter {
 }
 
 export interface AxiosResponseSuccessAdapter<T = any, D = any> {
-  ok: true
+  ok: boolean
   data: T
   status: number
   statusText: string
