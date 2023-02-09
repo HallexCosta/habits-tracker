@@ -1,6 +1,6 @@
 # NLW Setup - Habits
 
-Project developed by [Hállex Costa](https://github.com/hallexcosta) together with instructor [Diego Fernades](https://github.com/diego3g) and [Rodrigo Gonçalves](https://github.com/rodrigorgtic)
+Project developed by [Hállex Costa](https://github.com/hallexcosta) together with instructors [Diego Fernades](https://github.com/diego3g) and [Rodrigo Gonçalves](https://github.com/rodrigorgtic)
   
 The project is a Habit Tracker, that allow a user to create a new Habit and see your summary of habits completed 
 or non-completed changing the colors tone acoordingly with progress of user.
@@ -22,7 +22,7 @@ or non-completed changing the colors tone acoordingly with progress of user.
 
 - [ ] Notifications on Web
 - [ ] Notifications on Mobile
-- [x] Authenticate with [Firebase](https://console.firebase.google.com) or [Nhost](https://nhost.io)
+- [ ] Authenticate with [Firebase](https://console.firebase.google.com) or [Nhost](https://nhost.io)
 - [ ] Deploy API on [Render](https://render.com)
 - [ ] Deploy Web on [Netlify](https://netlify.com), [Vercel](https://vercel.com) or [Render](https://render.com)
 - [ ] Apply Clean Architecture on Frontend

@@ -54,8 +54,5 @@ web-build/
 cache/
 
 
-apps/mobile-e2e/artifacts
-apps/teste-expo-e2e/artifacts
-
-apps/**/.env
-apps/expo-test-e2e/artifacts
+packages/mobile-e2e/artifacts
+packages/teste-expo-e2e/artifacts
