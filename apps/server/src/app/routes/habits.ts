@@ -255,49 +255,46 @@ export async function habitsRoutes(app: FastifyInstance) {
   })
 
   app.get('/summary', async (request, reply) => {
-    const { email } = await handleAuthenticate(request.headers.authorization)
+    const userAuth = await handleAuthenticate(request.headers.authorization)
+
+    if (!userAuth) {
+      reply.status(400)
+      return {
+        message: 'User firebase no is valid',
+      }
+    }
 
     try {
       const user = await prisma.user.findUnique({
         where: {
-          email,
+          email: userAuth.email,
         },
       })
 
       if (!user) {
-        throw new Error(`User with email "${email}" not found`)
+        throw new Error(`User with email "${userAuth.email}" not found`)
       }
 
       // [ { date: '16/05', amount: 5, completed: 1, userId: 'UUID' } ]
       return await prisma.$queryRaw`
-        SELECT 
-          D.date,
-          D.id,
-          (
-            SELECT 
-              cast(count(*) as float)
-            FROM day_habits DH
-            JOIN habits H
-              on H.user_id = U.id 
-              AND DH.habit_id = H.id
-            WHERE DH.day_id = D.id
-          ) as completed,
-          (
-            SELECT 
-              cast(count(*) as float)
-            FROM habit_week_days HWD
-            JOIN habits H
-              ON H.id = HWD.habit_id
-              and H.user_id = U.id
-            WHERE 
-              HWD.week_day = cast(strftime('%w', D.date / 1000.0, 'unixepoch') as int)
-              AND H.created_at <= D.date
-          ) as amount,
-          U.id as userId
-        FROM days D
-        JOIN users U
-          ON U.id = ${user.id}
-        ORDER BY D.date desc
+         SELECT users.id, days.date, 
+          (CAST(COUNT(habit_week_days.id) AS FLOAT)) AS amount,
+          (CAST(COUNT(day_habits.id) AS FLOAT) ) AS completed
+        FROM users
+          LEFT JOIN user_days 
+            ON user_days.user_id = users.id
+          LEFT JOIN days 
+            ON days.id = user_days.day_id
+          LEFT JOIN habits 
+            ON habits.user_id = users.id
+          LEFT JOIN day_habits 
+            on day_habits.day_id = days.id
+          LEFT JOIN habit_week_days 
+            ON habit_week_days.habit_id = habits.id
+          AND habit_week_days.week_day = CAST(strftime('%w', days.date / 1000.0, 'unixepoch') AS INT)
+        WHERE users.id = ${user.id}
+        GROUP BY 1
+        ORDER BY days.date desc
       `
     } catch (e) {
       console.log(e)
