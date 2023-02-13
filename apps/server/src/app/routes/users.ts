@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { prisma } from '../../lib/prisma'
 import { handleAuthenticate } from '../helpers/utils'
 
-export async function usersRoutes(app: FastifyInstance) {
+export function usersRoutes(app: FastifyInstance) {
   app.post('/users', async (request, reply) => {
     try {
       const { uid } = await handleAuthenticate(request.headers.authorization)
