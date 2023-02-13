@@ -17,6 +17,7 @@ export async function handleAuthenticate(
         break
       default:
         console.log('FIREBASE error not identified')
+        console.log(e)
     }
     return null
   }
