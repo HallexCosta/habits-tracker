@@ -14,15 +14,17 @@ model Habit {
   user_id    String
   dayHabits  DayHabit[]
   weekDays   HabitWeekDays[]
-  user User @relation(fields: [user_id], references: [id])
+  user       User            @relation(fields: [user_id], references: [id])
+
   @@map("habits")
 }
 
 model Day {
-  id   String   @id @default(uuid())
-  date DateTime @unique
+  id        String     @id @default(uuid())
+  date      DateTime   @unique
   dayHabits DayHabit[]
   userDays  UserDay[]
+
   @@map("days")
 }
 
@@ -32,6 +34,7 @@ model DayHabit {
   habit_id String
   habit    Habit  @relation(fields: [habit_id], references: [id])
   day      Day    @relation(fields: [day_id], references: [id])
+
   @@unique([day_id, habit_id])
   @@map("day_habits")
 }
@@ -41,16 +44,18 @@ model HabitWeekDays {
   habit_id String
   week_day Int
   habit    Habit  @relation(fields: [habit_id], references: [id])
+
   @@unique([habit_id, week_day])
   @@map("habit_week_days")
 }
 
 model UserDay {
-  id String @id @default(uuid())
+  id      String @id @default(uuid())
   user_id String
   day_id  String
-  user User @relation(fields: [user_id], references: [id])
-  day  Day  @relation(fields: [day_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
+  day     Day    @relation(fields: [day_id], references: [id])
+
   @@unique([user_id, day_id])
   @@map("user_days")
 }
@@ -59,20 +64,33 @@ model UserDetails {
   firebase_uid String  @id
   provider     String?
   user_id      String  @unique
-  user User @relation(fields: [user_id], references: [id])
+  user         User    @relation(fields: [user_id], references: [id])
+
   @@unique([user_id, firebase_uid])
   @@map("user_details")
 }
 
 model User {
-  id       String  @id @default(uuid())
-  name     String
-  email    String
-  password String?
-  photoURL String?
-  userDetails UserDetails?
-  userDays    UserDay[]
-  userHabits  Habit[]
+  id                String             @id @default(uuid())
+  name              String
+  email             String
+  password          String?
+  photoURL          String?
+  userDetails       UserDetails?
+  userDays          UserDay[]
+  userHabits        Habit[]
+  userBrowsers UserBrowser[]
+
   @@unique([email])
   @@map("users")
+}
+
+model UserBrowser {
+  id              String @id @default(uuid())
+  browser_id      String
+  user_id         String
+  user            User   @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, browser_id])
+  @@map("user_browsers")
 }
