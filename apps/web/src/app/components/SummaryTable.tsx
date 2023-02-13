@@ -1,3 +1,4 @@
+import React from 'react'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { api } from '../../lib/axios'
@@ -25,7 +26,7 @@ export function SummaryTable({ isOpenModal }: SummaryTableProps) {
     console.log('Estou sendo chamado')
     if (!isOpenModal) {
       console.log('Estou buscando o usuário')
-      const { token } = getLocalStorageData<UserLogged>('userLogged')
+      const { token } = getLocalStorageData<UserLogged>('user-logged')
       console.log(token)
 
       api

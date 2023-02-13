@@ -1,3 +1,4 @@
+import React from 'react'
 import { AxiosResponse } from 'axios'
 import dayjs from 'dayjs'
 import { useState, useEffect } from 'react'
@@ -27,7 +28,7 @@ export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
   const isDateInPast = dateEndOfDay.isBefore(currentDate)
 
   async function handleToggleHabit(habitId: string) {
-    const { token } = getLocalStorageData<UserLogged>('userLogged')
+    const { token } = getLocalStorageData<UserLogged>('user-logged')
 
     const url = `/habits/${habitId}/toggle`
     const noBody = {}
@@ -59,7 +60,7 @@ export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
   }
 
   useEffect(() => {
-    const { token } = getLocalStorageData<UserLogged>('userLogged')
+    const { token } = getLocalStorageData<UserLogged>('user-logged')
 
     const getDayURL = `days`
     api
