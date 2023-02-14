@@ -1,0 +1,3 @@
+[build]
+  command = "pnpm install && pnpm --filter web build"
+  publish = "apps/web/dist"
