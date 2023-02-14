@@ -3,17 +3,10 @@ import React, { useEffect, useState } from 'react'
 
 import '../lib/dayjs'
 import '../styles/global.css'
-import { api } from '../lib/axios'
-import { app } from '../lib/firebase'
 
 import { Header } from './components/Header'
 import { SummaryTable } from './components/SummaryTable'
 import * as Modal from './components/SignInModal'
-
-import { registerServiceWorker } from './utils/register-service-worker'
-import { dispatchNotification } from './utils/dispatch-notification'
-import { getLocalStorageData } from './utils/get-local-storage-data'
-import { hasTokenExpired } from './utils/has-token-expired'
 
 import {
   GoogleAuthProvider,
@@ -24,7 +17,15 @@ import {
 } from 'firebase/auth'
 
 import { GitHub, Google, Email } from '@mui/icons-material'
-import { AxiosResponseSuccessAdapter } from '../lib/axios/axios-interceptor-response-adapter'
+
+import { app } from '../lib/firebase'
+import { api, AxiosResponseSuccessAdapter } from '../lib/axios'
+
+import { registerServiceWorker } from './utils/register-service-worker'
+import { dispatchNotification } from './utils/dispatch-notification'
+import { getLocalStorageData } from './utils/get-local-storage-data'
+import { hasTokenExpired } from './utils/has-token-expired'
+import { habitsTrackerLocalStorageAdapter } from './adapters/localStorage'
 
 // Dict is abbreviation to Dictonary
 type DictSignInMethodKeysAllow = 'google' | 'github' | 'email'
@@ -44,8 +45,10 @@ async function loadServiceWorker(token: string) {
 }
 
 export function App() {
-  const { token } = getLocalStorageData<UserLogged>('user-logged')
-  const openedModal = hasTokenExpired(token || '')
+  const userLogged =
+    habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
+  const openedModal = hasTokenExpired(userLogged.token || '')
+
   const [openModal, setOpenModal] = useState(openedModal)
 
   async function handleSignInWithFirebase(method: DictSignInMethodKeysAllow) {
@@ -63,7 +66,7 @@ export function App() {
       const forceRefresh = true
       const token = await userCredentials.user.getIdToken(forceRefresh)
 
-      const userAlreadyLogged = getLocalStorageData<UserLogged>('user-logged')
+      //const userAlreadyLogged = habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
       let userResponse: AxiosResponseSuccessAdapter<{
         user: UserLogged['user']
       }>
@@ -74,7 +77,7 @@ export function App() {
         },
       }
 
-      if (userAlreadyLogged) {
+      if (userLogged) {
         userResponse = await api.post('/users/auth', {}, options)
         alert('Sucesso no login - usuário autenticado')
       } else {
@@ -88,8 +91,8 @@ export function App() {
         alert('Sucesso no login - usuário criado')
       }
 
-      localStorage.setItem(
-        '@habits-tracker:user-logged',
+      habitsTrackerLocalStorageAdapter.setItem(
+        'user-logged',
         JSON.stringify({
           user: userResponse.data.user,
           token,
@@ -103,7 +106,7 @@ export function App() {
 
   useEffect(() => {
     if (!openModal) {
-      loadServiceWorker(token)
+      loadServiceWorker(userLogged.token)
     }
   }, [openModal])
 

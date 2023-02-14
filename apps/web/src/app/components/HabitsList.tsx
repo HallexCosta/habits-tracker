@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { api } from '../../lib/axios'
 import { Day } from '../domains/day'
 import { AxiosResponseSuccessAdapter } from '../../lib/axios/axios-interceptor-response-adapter'
-import { getLocalStorageData } from '../utils/get-local-storage-data'
+import { habitsTrackerLocalStorageAdapter } from '../adapters/localStorage'
 
 import { CheckBox } from './CheckBox'
 
@@ -15,6 +15,9 @@ interface HabitsListProps {
 }
 
 export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
+  const { token } =
+    habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
+
   const defaultDay = {
     possibleHabits: [],
     completedHabits: [],
@@ -28,8 +31,6 @@ export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
   const isDateInPast = dateEndOfDay.isBefore(currentDate)
 
   async function handleToggleHabit(habitId: string) {
-    const { token } = getLocalStorageData<UserLogged>('user-logged')
-
     const url = `/habits/${habitId}/toggle`
     const noBody = {}
     await api.patch(url, noBody, {
@@ -60,11 +61,8 @@ export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
   }
 
   useEffect(() => {
-    const { token } = getLocalStorageData<UserLogged>('user-logged')
-
-    const getDayURL = `days`
     api
-      .get<Day>(getDayURL, {
+      .get<Day>('days', {
         params: {
           date: date.toISOString(),
         },
