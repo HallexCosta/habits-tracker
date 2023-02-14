@@ -1,3 +1,5 @@
+import React from 'react'
+
 interface Props {
   progress: number
 }
@@ -11,10 +13,9 @@ export function ProgressBar({ progress }: Props) {
         aria-valuenow={progress}
         className="h-3 rounded-xl bg-violet-600 transition-all"
         style={{
-          width: `${progress}%`
+          width: `${progress}%`,
         }}
       />
     </div>
   )
 }
-

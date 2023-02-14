@@ -1,8 +1,5 @@
-import React, { FunctionComponent, useState } from 'react'
+import React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-
-import { hasTokenExpired } from '../utils/has-token-expired'
-import { getLocalStorageData } from '../utils/get-local-storage-data'
 
 interface SignInModalProps {
   openedModal: boolean
