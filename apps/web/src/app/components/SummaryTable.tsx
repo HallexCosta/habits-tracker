@@ -6,7 +6,8 @@ import { Summary } from '../domains'
 
 import { AxiosResponseSuccessAdapter } from '../../lib/axios/axios-interceptor-response-adapter'
 import { generateDatesFromBeginning } from '../utils/generate-dates-from-beginning'
-import { getLocalStorageData } from '../utils/get-local-storage-data'
+import { habitsTrackerLocalStorageAdapter } from '../adapters/localStorage'
+
 import { HabitDay } from './HabitDay'
 import { WeekDay } from './WeekDay'
 
@@ -23,10 +24,9 @@ export function SummaryTable({ isOpenModal }: SummaryTableProps) {
   const [summary, setSummary] = useState<Summary>([])
 
   useEffect(() => {
-    console.log('Estou sendo chamado')
     if (!isOpenModal) {
-      console.log('Estou buscando o usuário')
-      const { token } = getLocalStorageData<UserLogged>('user-logged')
+      const { token } =
+        habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
       console.log(token)
 
       api

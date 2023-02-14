@@ -3,7 +3,7 @@ import * as CheckBox from '@radix-ui/react-checkbox'
 import { Check } from 'phosphor-react'
 import { FormEvent, useState } from 'react'
 import { api } from '../../lib/axios'
-import { getLocalStorageData } from '../utils/get-local-storage-data'
+import { habitsTrackerLocalStorageAdapter } from '../adapters/localStorage'
 
 const availableWeekDays = [
   'Domingo',
@@ -24,7 +24,8 @@ export function NewHabitForm() {
     console.log('sendTitle', title)
     console.log('sendWeekDays', weekDays)
 
-    const { user, token } = getLocalStorageData<UserLogged>('user-logged')
+    const { user, token } =
+      habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
 
     if (!title || weekDays.length === 0)
       return alert(
