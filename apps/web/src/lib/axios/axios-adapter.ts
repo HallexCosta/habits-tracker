@@ -14,14 +14,10 @@ export class AxiosAdapter implements AxiosAdapterMethods {
 
   public create(config: CreateAxiosDefaults) {
     const api = this.axios.create(config)
-    api.interceptors.response.use(...this.handleOnInterceptResponse())
+    api.interceptors.response.use(
+      this.intecerptors.response.onInterceptSuccess,
+      this.intecerptors.response.onInterceptError
+    )
     return api
-  }
-
-  private handleOnInterceptResponse(): TupleInterceptResponseAdapter {
-    return [
-      this.intecerptors.response.onInterceptSuccess.bind(this),
-      this.intecerptors.response.onInterceptError.bind(this),
-    ]
   }
 }

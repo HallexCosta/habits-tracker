@@ -1,3 +1,4 @@
+import React from 'react'
 import * as CheckBox from '@radix-ui/react-checkbox'
 import { Check } from 'phosphor-react'
 import { FormEvent, useState } from 'react'
@@ -23,7 +24,7 @@ export function NewHabitForm() {
     console.log('sendTitle', title)
     console.log('sendWeekDays', weekDays)
 
-    const { user, token } = getLocalStorageData<UserLogged>('userLogged')
+    const { user, token } = getLocalStorageData<UserLogged>('user-logged')
 
     if (!title || weekDays.length === 0)
       return alert(

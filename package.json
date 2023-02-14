@@ -4,9 +4,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "lerna:start": "lerna run start"
+    "lerna:start": "lerna run dev"
   },
   "dependencies": {
+    "@emotion/styled": "^11.10.5",
     "@expo-google-fonts/inter": "^0.2.2",
     "@expo/metro-config": "0.5.2",
     "@expo/webpack-config": "~0.17.3",
@@ -24,6 +25,7 @@
     "axios": "^1.2.3",
     "clsx": "^1.2.1",
     "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
     "expo": "47.0.9",
     "expo-font": "^11.0.1",
     "expo-splash-screen": "~0.17.5",
@@ -31,7 +33,6 @@
     "fastify": "^4.12.0",
     "firebase": "^9.16.0",
     "firebase-admin": "^11.5.0",
-    "lerna": "^6.4.1",
     "nativewind": "^2.0.11",
     "phosphor-react": "^1.4.1",
     "react": "18.1.0",
@@ -47,7 +48,6 @@
   },
   "devDependencies": {
     "@expo/cli": "0.4.10",
-    "@nrwl/cli": "^15.6.3",
     "@nrwl/cypress": "15.5.2",
     "@nrwl/detox": "15.5.2",
     "@nrwl/devkit": "15.5.2",
@@ -111,5 +111,8 @@
     "vite-plugin-eslint": "^1.8.1",
     "vite-tsconfig-paths": "^4.0.2",
     "vitest": "^0.25.8"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

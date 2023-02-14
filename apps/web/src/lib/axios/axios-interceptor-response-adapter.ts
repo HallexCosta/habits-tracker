@@ -1,28 +1,25 @@
 import {
   AxiosError,
-  AxiosRequestConfig,
   AxiosResponse,
   AxiosResponseHeaders,
   RawAxiosResponseHeaders,
 } from 'axios'
 
-export interface AxiosResponseErrorAdapter {
-  ok: boolean
-  data?: any
-  status?: number
-  statusText?: string
-  headers?: AxiosResponseHeaders
-  config?: AxiosRequestConfig
-  request?: any
-}
-
-export interface AxiosResponseSuccessAdapter<T = any, D = any> {
+export interface AxiosResponseErrorAdapter<T = any> extends AxiosError {
   ok: boolean
   data: T
   status: number
   statusText: string
   headers: RawAxiosResponseHeaders | AxiosResponseHeaders
-  config: AxiosRequestConfig<D>
+  request?: any
+}
+
+export interface AxiosResponseSuccessAdapter<T = any> extends AxiosResponse {
+  ok: boolean
+  data: T
+  status: number
+  statusText: string
+  headers: RawAxiosResponseHeaders | AxiosResponseHeaders
   request?: any
 }
 
@@ -48,10 +45,10 @@ export class AxiosInterceptorResponseAdapter
     }
   }
   public onInterceptError(error: AxiosError): AxiosResponseErrorAdapter {
-    const response = error?.response || {}
+    const response = error.response || {}
     return {
       ...response,
       ok: false,
-    }
+    } as AxiosResponseErrorAdapter
   }
 }

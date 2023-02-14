@@ -6,7 +6,7 @@ import { handleAuthenticate } from '../helpers/utils'
 
 import { prisma } from '../../lib/prisma'
 
-export async function habitsRoutes(app: FastifyInstance) {
+export function habitsRoutes(app: FastifyInstance) {
   app.get('/', async () => {
     return "I'm alive!"
   })

@@ -1,3 +1,5 @@
+import React from 'react'
+
 interface WeekDayProps {
   children: React.ReactNode
 }
@@ -9,4 +11,3 @@ export function WeekDay(props: WeekDayProps) {
     </div>
   )
 }
-
