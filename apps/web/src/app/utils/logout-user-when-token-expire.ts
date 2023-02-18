@@ -6,8 +6,9 @@ export function logoutUserWhenTokenExpire(handleLogout: () => void) {
     habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
 
   const expireTimeToken = getExpireTokenTime(userLogged.token)
-  const now = Math.floor(+new Date() / 1000)
-  const differenceInMinutes = expireTimeToken - now
+  // Get date in "milliseconds" and divid by 1000 to return date in "seconds"
+  const nowInSeconds = Math.floor(+new Date() / 1000)
+  const differenceInMinutes = expireTimeToken - nowInSeconds
   // console.log(expireTimeToken, now)
 
   const timeoutInMinutes = Math.floor(differenceInMinutes / 60)
