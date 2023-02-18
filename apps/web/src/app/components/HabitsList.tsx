@@ -11,7 +11,7 @@ import { CheckBox } from './CheckBox'
 
 interface HabitsListProps {
   date: Date
-  onCompletedChange: (habitsCompleted: number) => void
+  onCompletedChange: (amountHabits: number, habitsCompleted: number) => void
 }
 
 export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
@@ -51,7 +51,7 @@ export function HabitsList({ date, onCompletedChange }: HabitsListProps) {
       }
 
       // up progress bar
-      onCompletedChange(completedHabits.length)
+      onCompletedChange(prevDay.possibleHabits.length, completedHabits.length)
 
       return {
         possibleHabits: prevDay.possibleHabits,

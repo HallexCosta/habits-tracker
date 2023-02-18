@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -15,21 +15,15 @@ interface Props {
   completed?: number
   amount?: number
 }
-interface HabitProps {
-  id: string
-  title: string
-}
 
 export function HabitDay({ completed = 0, amount = 0, date }: Props) {
   const completedPercentage = generateProgressPercentage(amount, completed)
-
   const [upProgress, setUpProgress] = useState(completedPercentage)
 
   const dayAndMonth = dayjs(date).format('DD/MM')
   const dayOfWeek = upperFirstCase(dayjs(date).format('dddd'))
 
-  function handleOnCompletedChange(habitsCompleted: number) {
-    console.log(habitsCompleted)
+  function handleOnCompletedChange(amount: number, habitsCompleted: number) {
     setUpProgress(generateProgressPercentage(amount, habitsCompleted))
   }
 
@@ -40,15 +34,15 @@ export function HabitDay({ completed = 0, amount = 0, date }: Props) {
           'w-10 h-10 border-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-violet-700 focus:ring-offset-2 focus:ring-offset-[#09090A]',
           {
             'bg-zinc-900  border-zinc-800': upProgress === 0,
-            'bg-violet-500/80 border-violet-500/25':
+            'bg-violet-900/80 border-violet-900/25':
               upProgress > 0 && upProgress < 20,
-            'bg-violet-600/80 border-violet-600/25':
+            'bg-violet-800/80 border-violet-800/25':
               upProgress >= 20 && upProgress < 40,
             'bg-violet-700/80 border-violet-700/25':
               upProgress >= 40 && upProgress < 60,
-            'bg-violet-800/80 border-violet-800/25':
+            'bg-violet-600/80 border-violet-600/25':
               upProgress >= 60 && upProgress < 80,
-            'bg-violet-900/80 border-violet-900/25': upProgress >= 80,
+            'bg-violet-500/80 border-violet-500/25': upProgress >= 80,
           }
         )}
       />
