@@ -1,8 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, { useEffect, useState } from 'react'
+import { useAtom } from 'jotai'
 
 import '../lib/dayjs'
 import '../styles/global.css'
+import { logoutUserWhenTokenExpire } from './utils/logout-user-when-token-expire'
 
 import { Header } from './components/Header'
 import { SummaryTable } from './components/SummaryTable'
@@ -14,6 +16,7 @@ import {
   EmailAuthProvider,
   signInWithPopup,
   getAuth,
+  UserCredential,
 } from 'firebase/auth'
 
 import { GitHub, Google, Email } from '@mui/icons-material'
@@ -23,9 +26,8 @@ import { api, AxiosResponseSuccessAdapter } from '../lib/axios'
 
 import { registerServiceWorker } from './utils/register-service-worker'
 import { dispatchNotification } from './utils/dispatch-notification'
-import { getLocalStorageData } from './utils/get-local-storage-data'
-import { hasTokenExpired } from './utils/has-token-expired'
 import { habitsTrackerLocalStorageAdapter } from './adapters/localStorage'
+import { isUserLoggedAtom } from './states/is-user-logged'
 
 // Dict is abbreviation to Dictonary
 type DictSignInMethodKeysAllow = 'google' | 'github' | 'email'
@@ -45,11 +47,35 @@ async function loadServiceWorker(token: string) {
 }
 
 export function App() {
+  const [isUserLogged, setIsUserLogged] = useAtom(isUserLoggedAtom)
+
   const userLogged =
     habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
-  const openedModal = hasTokenExpired(userLogged.token || '')
 
-  const [openModal, setOpenModal] = useState(openedModal)
+  async function authenticateUser(options: {
+    headers: { authorization: string }
+  }): Promise<
+    AxiosResponseSuccessAdapter<{
+      user: UserLogged['user']
+    }>
+  > {
+    return await api.post('/users/auth', {}, options)
+  }
+  async function createUser(
+    userCredentials: UserCredential,
+    options: { headers: { authorization: string } }
+  ): Promise<
+    AxiosResponseSuccessAdapter<{
+      user: UserLogged['user']
+    }>
+  > {
+    const userBody = {
+      name: userCredentials.user.displayName,
+      email: userCredentials.user.email,
+      photoURL: userCredentials.user.photoURL,
+    }
+    return await api.post('/users', userBody, options)
+  }
 
   async function handleSignInWithFirebase(method: DictSignInMethodKeysAllow) {
     const allowAuthMethods: DictSignIn = {
@@ -66,7 +92,6 @@ export function App() {
       const forceRefresh = true
       const token = await userCredentials.user.getIdToken(forceRefresh)
 
-      //const userAlreadyLogged = habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
       let userResponse: AxiosResponseSuccessAdapter<{
         user: UserLogged['user']
       }>
@@ -77,42 +102,42 @@ export function App() {
         },
       }
 
-      if (userLogged) {
-        userResponse = await api.post('/users/auth', {}, options)
+      if (habitsTrackerLocalStorageAdapter.has('user-logged')) {
+        userResponse = await authenticateUser(options)
         alert('Sucesso no login - usuário autenticado')
       } else {
-        const userBody = {
-          name: userCredentials.user.displayName,
-          email: userCredentials.user.email,
-          photoURL: userCredentials.user.photoURL,
-        }
-
-        userResponse = await api.post('/users', userBody, options)
-        alert('Sucesso no login - usuário criado')
+        userResponse = await createUser(userCredentials, options)
+        if (userResponse.ok) alert('Sucesso no login - usuário criado')
+        // this ensure that user will be authenticate if it already exists
+        if (!userResponse.ok) userResponse = await authenticateUser(options)
       }
 
-      habitsTrackerLocalStorageAdapter.setItem(
-        'user-logged',
-        JSON.stringify({
-          user: userResponse.data.user,
-          token,
-        })
-      )
-      setOpenModal(false)
-      alert('Sucesso no login - usuário criado')
+      const userLogged = {
+        user: userResponse.data.user,
+        token,
+      }
+      console.log(userLogged)
+      habitsTrackerLocalStorageAdapter.setItem('user-logged', userLogged)
+
+      setIsUserLogged(true)
       return
     }
   }
 
   useEffect(() => {
-    if (!openModal) {
+    logoutUserWhenTokenExpire(() => {
+      setIsUserLogged(false)
+      console.log('deslogando o usuário')
+    })
+
+    if (isUserLogged) {
       loadServiceWorker(userLogged.token)
     }
-  }, [openModal])
+  }, [isUserLogged])
 
   return (
     <div className="w-screen h-screen flex justify-center items-center text-white">
-      <Modal.SignInModal openedModal={openModal}>
+      <Modal.SignInModal>
         <Modal.Title>Faça login</Modal.Title>
 
         <Modal.Buttons>
@@ -145,7 +170,7 @@ export function App() {
       <div className="w-full max-w-5xl px-6 flex flex-col gap-16">
         <Header />
 
-        <SummaryTable isOpenModal={openModal} />
+        <SummaryTable />
       </div>
     </div>
   )
