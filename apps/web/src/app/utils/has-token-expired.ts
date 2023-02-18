@@ -10,8 +10,17 @@ function handleEncodedPayload(encodedPayload: string) {
   return decodeURIComponent(escape(atob(encodedPayload)))
 }
 
+export function getExpireTokenTime(token: string): number {
+  if (!token) return 0
+  const userInBase64 = token.split('.')[1]
+  const userInJSON = handleEncodedPayload(userInBase64)
+  const user = JSON.parse(userInJSON)
+  return user.exp as number
+}
+
 export function hasTokenExpired(token: string) {
   if (!token) return true
+  // current date in seconds
   const now = +new Date() / 1000
   const userInBase64 = token.split('.')[1]
   const userInJSON = handleEncodedPayload(userInBase64)
