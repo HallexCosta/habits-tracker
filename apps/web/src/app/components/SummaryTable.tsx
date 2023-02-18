@@ -10,6 +10,8 @@ import { habitsTrackerLocalStorageAdapter } from '../adapters/localStorage'
 
 import { HabitDay } from './HabitDay'
 import { WeekDay } from './WeekDay'
+import { useAtom } from 'jotai'
+import { isUserLoggedAtom } from '../states/is-user-logged'
 
 const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
@@ -17,17 +19,15 @@ const summaryDates = generateDatesFromBeginning()
 const minimiumSummaryDatesSize = 18 * 7 // 18 weeks
 const amountOfDaysToFill = minimiumSummaryDatesSize - summaryDates.length
 
-interface SummaryTableProps {
-  isOpenModal: boolean
-}
-export function SummaryTable({ isOpenModal }: SummaryTableProps) {
+export function SummaryTable() {
+  const [isUserLogged] = useAtom(isUserLoggedAtom)
+
   const [summary, setSummary] = useState<Summary>([])
 
   useEffect(() => {
-    if (!isOpenModal) {
+    if (isUserLogged) {
       const { token } =
         habitsTrackerLocalStorageAdapter.getItem<UserLogged>('user-logged')
-      console.log(token)
 
       api
         .get<Summary>('/summary', {
@@ -36,12 +36,11 @@ export function SummaryTable({ isOpenModal }: SummaryTableProps) {
           },
         })
         .then((response: AxiosResponseSuccessAdapter<Summary>) => {
-          console.log(response)
           setSummary(response.data)
         })
         .catch((e) => console.log(e))
     }
-  }, [isOpenModal])
+  }, [isUserLogged])
 
   return (
     <div className="w-full flex">
