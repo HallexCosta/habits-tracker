@@ -3,8 +3,9 @@
   "compilerOptions": {
     "outDir": "../../dist/apps/server",
     "target": "es2020",
-    "module": "commonjs",
+    "module": "CommonJS",
+    "esModuleInterop": true,
     "typeRoots": ["node", "./src/@types"]
   },
-  "include": ["src"]
+  "include": ["src", "__tests__"],
 }

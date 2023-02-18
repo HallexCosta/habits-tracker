@@ -18,7 +18,7 @@ export function CheckBox({
   const [isChecked, setIsChecked] = useState(completed)
 
   function toggleChecked() {
-    console.log('toggleChecked')
+    // console.log('toggleChecked')
     setIsChecked((prevIsChecked) => !prevIsChecked)
   }
 

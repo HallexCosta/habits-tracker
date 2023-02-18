@@ -25,7 +25,7 @@ export function usersRoutes(app: FastifyInstance) {
         request.body
       )
 
-      const user = {
+      const userData = {
         name,
         email,
         password,
@@ -33,23 +33,20 @@ export function usersRoutes(app: FastifyInstance) {
       }
 
       // create the user with user_details from firebase
-      const userCreated = await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
-          ...user,
+          ...userData,
           userDetails: {
             create: {
               firebase_uid: uid,
             },
           },
         },
-        include: {
-          userDetails: true,
-        },
       })
 
       reply.status(201)
       return {
-        userCreated,
+        user,
       }
     } catch (e) {
       reply.status(400)

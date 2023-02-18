@@ -1,8 +1,10 @@
 import React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
+import { useAtom } from 'jotai'
+
+import { isUserLoggedAtom } from '../states/is-user-logged'
 
 interface SignInModalProps {
-  openedModal: boolean
   children: React.ReactNode
 }
 export function Buttons({ children }: { children: React.ReactNode }) {
@@ -16,9 +18,11 @@ export function Title({ children }: { children: React.ReactNode }) {
   return <Dialog.Title className="text-3xl font-bold">{children}</Dialog.Title>
 }
 
-export function SignInModal({ openedModal, children }: SignInModalProps) {
+export function SignInModal({ children }: SignInModalProps) {
+  const [isUserLogged] = useAtom(isUserLoggedAtom)
+
   return (
-    <Dialog.Root open={openedModal}>
+    <Dialog.Root open={!isUserLogged}>
       <Dialog.Portal>
         <Dialog.Overlay className="w-screen h-screen bg-black/80 absolute inset-0"></Dialog.Overlay>
 

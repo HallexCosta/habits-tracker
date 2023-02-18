@@ -6,6 +6,13 @@ import { handleAuthenticate } from '../helpers/utils'
 
 import { prisma } from '../../lib/prisma'
 
+type UserSummaryDay = {
+  amount: number
+  completed: number
+  userId: string
+  date: Date
+}
+
 export function habitsRoutes(app: FastifyInstance) {
   app.get('/', async () => {
     return "I'm alive!"
@@ -46,6 +53,7 @@ export function habitsRoutes(app: FastifyInstance) {
       const today = dayjs().startOf('day').toDate()
 
       reply.status(201)
+
       return await prisma.habit.create({
         data: {
           user_id: userId,
@@ -115,10 +123,10 @@ export function habitsRoutes(app: FastifyInstance) {
           FROM habits
           LEFT JOIN users
             ON users.id = habits.user_id
-          LEFT JOIN user_days
-            ON user_days.user_id = users.id
+          LEFT JOIN day_users
+            ON day_users.user_id = users.id
           LEFT JOIN days
-            ON days.id = user_days.day_id
+            ON days.id = day_users.day_id
             AND days.date = ${parsedDate.toDate()}
           LEFT JOIN day_habits
             ON day_habits.day_id = days.id
@@ -194,34 +202,11 @@ export function habitsRoutes(app: FastifyInstance) {
       day = await prisma.day.create({
         data: {
           date: today,
-        },
-      })
-    }
-
-    // vinculando o dia ao usuário
-    const userDay = await prisma.userDay.findUnique({
-      where: {
-        user_id_day_id: {
-          user_id: user.id,
-          day_id: day.id,
-        },
-      },
-    })
-
-    if (userDay) {
-      await prisma.userDay.delete({
-        where: {
-          user_id_day_id: {
-            user_id: user.id,
-            day_id: day.id,
+          dayUsers: {
+            create: {
+              user_id: user.id,
+            },
           },
-        },
-      })
-    } else {
-      await prisma.userDay.create({
-        data: {
-          day_id: day.id,
-          user_id: user.id,
         },
       })
     }
@@ -275,27 +260,123 @@ export function habitsRoutes(app: FastifyInstance) {
         throw new Error(`User with email "${userAuth.email}" not found`)
       }
 
-      // [ { date: '16/05', amount: 5, completed: 1, userId: 'UUID' } ]
-      return await prisma.$queryRaw`
-         SELECT users.id, days.date, 
-          (CAST(COUNT(habit_week_days.id) AS FLOAT)) AS amount,
-          (CAST(COUNT(day_habits.id) AS FLOAT) ) AS completed
-        FROM users
-          LEFT JOIN user_days 
-            ON user_days.user_id = users.id
-          LEFT JOIN days 
-            ON days.id = user_days.day_id
-          LEFT JOIN habits 
+      async function defaultUserSummaryDays(userId: string, date: Date) {
+        const weekDay = dayjs(date).day()
+        const summary = await prisma.$queryRaw`
+          SELECT 
+            users.id as userId,
+            (
+              SELECT 
+              cast(count(habit_week_days.id) as float) as amount
+              FROM habit_week_days
+                JOIN habits
+                JOIN users
+              WHERE 
+                habit_week_days.habit_id = habits.id            
+                AND habit_week_days.week_day = ${weekDay}
+                AND users.id = ${user.id} 
+            ) as amount,
+            (
+              SELECT 
+                cast(count(day_habits.id) as float) as amount
+              FROM day_habits
+              WHERE 
+                day_habits.habit_id = habits.id
+                AND habits.user_id = users.id
+            ) as completed
+          FROM users
+          LEFT JOIN habits
             ON habits.user_id = users.id
-          LEFT JOIN day_habits 
-            on day_habits.day_id = days.id
-          LEFT JOIN habit_week_days 
-            ON habit_week_days.habit_id = habits.id
-          AND habit_week_days.week_day = CAST(strftime('%w', days.date / 1000.0, 'unixepoch') AS INT)
-        WHERE users.id = ${user.id}
-        GROUP BY 1
+          WHERE
+            users.id = ${user.id}
+        `
+        console.log(summary)
+
+        return [
+          {
+            ...summary[0],
+            date,
+          },
+        ]
+      }
+      console.log(user.id)
+      // listar os habitos de cada dia, forma quantitativa
+      // [ { date: '16/05', amount: 5, completed: 1, userId: 'UUID' } ]
+      // const userSummaryDays = await prisma.$queryRaw<UserSummaryDay[]>`
+      //   SELECT
+      //     days.date as date,
+      //     users.id as userId,
+      //     (
+      //       SELECT
+      //         cast(count(habit_week_days.id) as float)
+      //       FROM habit_week_days
+      //       JOIN habits
+      //       WHERE habit_week_days.habit_id = habits.id
+      //       AND habit_week_days.week_day = cast(strftime('%w', days.date / 1000.0, 'unixepoch') as int)
+      //       AND habits.created_at <= days.date
+      //     ) as amount,
+      //     (
+      //       SELECT
+      //         cast(count(day_habits.id) as float)
+      //       FROM day_habits
+      //       JOIN habits
+      //       WHERE day_habits.habit_id = habits.id
+      //       AND habits.user_id = users.id
+      //     ) as completed
+      //   FROM days
+      //   JOIN users
+      //   WHERE
+      //     users.id = ${user.id}
+      //     and (days.date IS NULL OR days.date IS NOT NULL)
+      //   GROUP BY days.date, users.id
+      //   ORDER BY days.date desc
+      // `
+      const today = dayjs(new Date()).startOf('day').toDate()
+      const todayInTimestamp = +today
+      console.log(today, todayInTimestamp)
+      const userSummaryDays = await prisma.$queryRaw<UserSummaryDay[]>`
+        SELECT 
+          users.id as userId,
+          coalesce(
+            cast(strftime('%Y-%m-%dT%H:%M:%f', days.date) as date),
+            -- return date to from javascript in format "YYYY-MM-DDTHH:MM:SS.SSS" if "days.date" is null
+            ${today.toISOString()}
+          ) as date,
+          (
+            SELECT 
+              cast(count(habit_week_days.id) as float)
+            FROM habit_week_days
+            JOIN habits
+            WHERE habit_week_days.habit_id = habits.id            
+            AND (
+              -- using date from days table to find habits from weekDay
+              habit_week_days.week_day = cast(strftime('%w', days.date / 1000.0, 'unixepoch') as int)
+              -- using current date to find habits from weekDay
+              OR habit_week_days.week_day = cast(strftime('%w', ${todayInTimestamp} / 1000.0, 'unixepoch') as int)
+            )
+            AND habits.created_at <= ${today}
+          ) as amount,
+          (
+            SELECT 
+              cast(count(day_habits.id) as float)
+            FROM day_habits
+            JOIN habits
+            WHERE day_habits.habit_id = habits.id
+            AND habits.user_id = users.id
+          ) as completed
+        FROM users
+        LEFT JOIN days
+        WHERE 
+          users.id = ${user.id}
         ORDER BY days.date desc
       `
+      // make sure you get a summary of data with the current day that maybe hasn't been created in the database yet
+      if (userSummaryDays.length === 0) {
+        console.log('retornando habito default')
+        return await defaultUserSummaryDays(user.id, new Date())
+      }
+
+      return userSummaryDays
     } catch (e) {
       console.log(e)
       reply.status(400)

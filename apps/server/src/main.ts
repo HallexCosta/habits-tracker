@@ -1,13 +1,6 @@
-import fastify from 'fastify'
-import cors from '@fastify/cors'
-import { appRoutes } from './app/routes'
+import { app } from './app'
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3333
-
-const app = fastify()
-
-app.register(cors)
-app.register(appRoutes)
 
 const start = async () => {
   try {
