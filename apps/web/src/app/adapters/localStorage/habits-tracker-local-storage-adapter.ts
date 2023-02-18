@@ -7,6 +7,8 @@ interface LocalStorageAdapterMethods {
   size(): number
 }
 
+type HabitsTrackerLocalStorageKeysAdapter = 'user-logged'
+
 interface HabitsTrackerLocalStorageAdapterMethods
   extends LocalStorageAdapterMethods {}
 
@@ -35,26 +37,30 @@ export class HabitsTrackerLocalStorageAdapter
     }
   }
 
-  private mountWithPrefix(key: string) {
+  private mountWithPrefix(key: HabitsTrackerLocalStorageKeysAdapter) {
     return `${this.prefix}:${key}`
   }
 
-  public removeItem(key: string): void {
+  public removeItem(key: HabitsTrackerLocalStorageKeysAdapter): void {
     return this.storage.removeItem(this.mountWithPrefix(key))
   }
 
-  public setItem<T>(key: string, value: T) {
+  public setItem<T>(key: HabitsTrackerLocalStorageKeysAdapter, value: T) {
     const payload = JSON.stringify(value)
+    console.log('payload', this.mountWithPrefix(key), payload)
     this.storage.setItem(this.mountWithPrefix(key), payload)
   }
 
-  public getItem<T>(key: string): T {
+  public getItem<T>(key: HabitsTrackerLocalStorageKeysAdapter): T {
     return JSON.parse(
       this.storage.getItem(this.mountWithPrefix(key)) || '{}'
     ) as T
   }
 
-  public has(key: string) {
+  public has(key: HabitsTrackerLocalStorageKeysAdapter) {
+    console.log(localStorage.getItem(this.mountWithPrefix(key)))
+    console.log(this.mountWithPrefix(key))
+    console.log('has', this.storage.getItem(this.mountWithPrefix(key)))
     return !!this.storage.getItem(this.mountWithPrefix(key))
   }
 }
