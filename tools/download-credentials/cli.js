@@ -29,8 +29,13 @@ function download({ url, filename }) {
 
      // after download completed close filestream
      file.on("finish", () => {
-         file.close();
-         console.log("Download Completed");
+       file.close();
+       console.log("Download Completed");
+
+       fs.promises.readFile(filename).then(content => {
+        console.log('--- CONTENT ---')
+        console.log(content.toString())
+      })
      });
   });
 }
