@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=18.12.0"
+  },
   "scripts": {
     "lerna:start": "lerna run dev"
   },
