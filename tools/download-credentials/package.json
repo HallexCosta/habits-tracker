@@ -1,0 +1,12 @@
+{
+  "name": "@tools/download-credentials",
+  "version": "1.0.0",
+  "description": "Tool to download credentials",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "download-credentials": "./cli.js"
+  }
+}

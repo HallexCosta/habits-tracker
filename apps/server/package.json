@@ -17,6 +17,7 @@
     "@fastify/cors": "^8.2.0",
     "@fastify/middie": "^8.1.0",
     "@prisma/client": "^4.9.0",
+    "@tools/download-credentials": "workspace:^1.0.0",
     "@types/supertest": "^2.0.12",
     "@types/web-push": "^3.3.2",
     "cors": "^2.8.5",
