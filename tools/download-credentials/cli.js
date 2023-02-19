@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const http = require('node:https')
-const path = require('node:path')
-const fs = require('node:fs')
+const http = require('https')
+const path = require('path')
+const fs = require('fs')
 
 const [,, ...args] = process.argv
 
