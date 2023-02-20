@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "build": "rm -rf ./dist && tsc --project tsconfig.build.json",
+    "build": "rm -rf ./dist && pnpm exec tsc --project tsconfig.build.json",
     "build:bundle": "rm -rf ./dist && node .esbuild/build.mjs",
     "start": "node -r dotenv/config ./dist/main.js",
     "dev": "tsx --inspect --watch -r dotenv/config ./src/main.ts",
