@@ -3,15 +3,17 @@ import webPush from 'web-push'
 import { z } from 'zod'
 import { prisma } from '../../lib/prisma'
 import { handleAuthenticate } from '../helpers/utils'
+import { webPushNotifications } from '../../configs/web-push-notifications'
 
-const pubKey = process.env.PUBLIC_KEY
-const pvtKey = process.env.PRIVATE_KEY
-
-webPush.setVapidDetails('http://192.168.0.19:3333', pubKey, pvtKey)
+webPush.setVapidDetails(
+  webPushNotifications.subject,
+  webPushNotifications.publicKey,
+  webPushNotifications.privateKey
+)
 
 export function notificationsRoutes(app: FastifyInstance) {
   app.get('/notifications/send/public_key', () => {
-    return pubKey
+    return webPushNotifications.publicKey
   })
 
   app.post('/notifications/register', async (request, reply) => {
@@ -50,8 +52,8 @@ export function notificationsRoutes(app: FastifyInstance) {
       where: {
         user_id_browser_id: {
           browser_id: subscription.endpoint,
-          user_id: user.id
-        }
+          user_id: user.id,
+        },
       },
     })
 

@@ -264,6 +264,7 @@ importers:
       cors: ^2.8.5
       cross-env: ^7.0.3
       dayjs: ^1.11.7
+      esbuild: ^0.15.7
       fastify: ^4.12.0
       prisma: ^4.9.0
       tap-nyan: ^1.1.0
@@ -284,6 +285,7 @@ importers:
       cors: 2.8.5
       cross-env: 7.0.3
       dayjs: 1.11.7
+      esbuild: 0.15.18
       fastify: 4.13.0
       prisma: 4.10.1
       tap-nyan: 1.1.0
