@@ -1,15 +1,13 @@
 import admin from 'firebase-admin'
 import { UserRecord } from 'firebase-admin/auth'
 
-import credential from '../habits-tracker-credentials.json'
+import { configs } from '../configs'
 
-if (!credential) {
-  throw new Error('Please add the "habits-tracker-credentials.json" in directory "./src/"')
-}
+const { firebase } = configs
 
 admin.initializeApp({
-  credential: admin.credential.cert(credential as unknown as string),
-  databaseURL: 'https://habits-tracker-5f7a4-default-rtdb.firebaseio.com/',
+  credential: admin.credential.cert(firebase.credential as unknown as string),
+  databaseURL: firebase.databaseURL,
 })
 
 export { admin, UserRecord }
