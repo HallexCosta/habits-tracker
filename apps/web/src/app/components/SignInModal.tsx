@@ -105,15 +105,6 @@ export function SignInModal() {
   }
 
   useEffect(() => {
-    // function logoutUserWhenRemoveStorage(event: StorageEvent) {
-    //   console.log(event)
-    //   if (
-    //     event.key === '@habits-tracker:user-logged' &&
-    //     event.newValue === null
-    //   ) {
-    //     setIsUserLogged(false)
-    //   }
-    // }
     const undoListenOnDeleteStorage =
       habitsTrackerLocalStorageAdapter.listenOnDeleteStorage({
         key: 'user-logged',
@@ -121,8 +112,6 @@ export function SignInModal() {
           setIsUserLogged(false)
         },
       })
-
-    // window.addEventListener('storage', logoutUserWhenRemoveStorage)
 
     return undoListenOnDeleteStorage
   }, [])
