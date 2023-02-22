@@ -1,3 +1,8 @@
+interface ListenOnDeleteStorageParams {
+  key: HabitsTrackerLocalStorageKeysAdapter
+  onDeleteStorage: () => void
+}
+
 interface LocalStorageAdapterMethods {
   size(): number
   removeItem(key: string): void
@@ -5,6 +10,7 @@ interface LocalStorageAdapterMethods {
   getItem<T extends {}>(key: string): T
   has(key: string): boolean
   size(): number
+  listenOnDeleteStorage(params: ListenOnDeleteStorageParams): void
 }
 
 type HabitsTrackerLocalStorageKeysAdapter = 'user-logged'
@@ -62,5 +68,23 @@ export class HabitsTrackerLocalStorageAdapter
     console.log(this.mountWithPrefix(key))
     console.log('has', this.storage.getItem(this.mountWithPrefix(key)))
     return !!this.storage.getItem(this.mountWithPrefix(key))
+  }
+
+  public handleStorage(
+    { key, onDeleteStorage }: ListenOnDeleteStorageParams,
+    event: StorageEvent
+  ) {
+    if (event.key === this.mountWithPrefix(key) && event.newValue === null) {
+      onDeleteStorage()
+    }
+  }
+  public listenOnDeleteStorage(params: ListenOnDeleteStorageParams) {
+    const boundedHandleStorage = this.handleStorage.bind(this, params)
+    window.addEventListener('storage', boundedHandleStorage)
+
+    const undoListenOnDeleteStorage = () => {
+      window.removeEventListener('storage', boundedHandleStorage)
+    }
+    return undoListenOnDeleteStorage
   }
 }
