@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("PRISMA_DATABASE_URL")
-  shadowDatabaseUrl      = env("PRISMA_SHADOW_DATABASE_URL")
 }
 
 model Habit {

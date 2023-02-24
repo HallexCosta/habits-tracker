@@ -302,6 +302,35 @@ export function habitsRoutes(app: FastifyInstance) {
       console.log(user.id)
       // listar os habitos de cada dia, forma quantitativa
       // [ { date: '16/05', amount: 5, completed: 1, userId: 'UUID' } ]
+      // const userSummaryDays = await prisma.$queryRaw<UserSummaryDay[]>`
+      //   SELECT
+      //     days.date as date,
+      //     users.id as userId,
+      //     (
+      //       SELECT
+      //         cast(count(habit_week_days.id) as float)
+      //       FROM habit_week_days
+      //       JOIN habits
+      //       WHERE habit_week_days.habit_id = habits.id
+      //       AND habit_week_days.week_day = cast(strftime('%w', days.date / 1000.0, 'unixepoch') as int)
+      //       AND habits.created_at <= days.date
+      //     ) as amount,
+      //     (
+      //       SELECT
+      //         cast(count(day_habits.id) as float)
+      //       FROM day_habits
+      //       JOIN habits
+      //       WHERE day_habits.habit_id = habits.id
+      //       AND habits.user_id = users.id
+      //     ) as completed
+      //   FROM days
+      //   JOIN users
+      //   WHERE
+      //     users.id = ${user.id}
+      //     and (days.date IS NULL OR days.date IS NOT NULL)
+      //   GROUP BY days.date, users.id
+      //   ORDER BY days.date desc
+      // `
       const today = dayjs(new Date()).startOf('day').toDate()
       const todayInTimestamp = +today
       console.log(today, todayInTimestamp)
@@ -309,22 +338,21 @@ export function habitsRoutes(app: FastifyInstance) {
         SELECT 
           users.id as userId,
           coalesce(
-            cast(to_char(days.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as date),
+            cast(strftime('%Y-%m-%dT%H:%M:%f', days.date) as date),
             -- return date to from javascript in format "YYYY-MM-DDTHH:MM:SS.SSS" if "days.date" is null
-            ${today}
+            ${today.toISOString()}
           ) as date,
           (
             SELECT 
               cast(count(habit_week_days.id) as float)
             FROM habit_week_days
-            JOIN habits 
-                ON habit_week_days.habit_id = habits.id 
+            JOIN habits
             WHERE habit_week_days.habit_id = habits.id            
             AND (
               -- using date from days table to find habits from weekDay
-              habit_week_days.week_day = extract(dow from days.date)
+              habit_week_days.week_day = cast(strftime('%w', days.date / 1000.0, 'unixepoch') as int)
               -- using current date to find habits from weekDay
-              OR habit_week_days.week_day = extract(dow from ${today}::date)
+              OR habit_week_days.week_day = cast(strftime('%w', ${todayInTimestamp} / 1000.0, 'unixepoch') as int)
             )
             AND habits.created_at <= ${today}
           ) as amount,
@@ -333,19 +361,20 @@ export function habitsRoutes(app: FastifyInstance) {
               cast(count(day_habits.id) as float)
             FROM day_habits
             JOIN habits
-              ON habits.user_id = users.id
-              AND habits.id = day_habits.habit_id
             WHERE day_habits.habit_id = habits.id
+            AND habits.user_id = users.id
           ) as completed
-          FROM users
-          LEFT JOIN day_users
-            ON day_users.user_id = users.id
-          LEFT JOIN days
-            ON days.id = day_users.day_id
-          WHERE 
-            users.id = ${user.id}
-          ORDER BY days.date desc
+        FROM users
+        LEFT JOIN days
+        WHERE 
+          users.id = ${user.id}
+        ORDER BY days.date desc
       `
+      // make sure you get a summary of data with the current day that maybe hasn't been created in the database yet
+      if (userSummaryDays.length === 0) {
+        console.log('retornando habito default')
+        return await defaultUserSummaryDays(user.id, new Date())
+      }
 
       return userSummaryDays
     } catch (e) {
