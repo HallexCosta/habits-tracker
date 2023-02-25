@@ -257,7 +257,6 @@ importers:
       '@fastify/cors': ^8.2.0
       '@fastify/middie': ^8.1.0
       '@prisma/client': ^4.9.0
-      '@tools/download-credentials': workspace:^1.0.0
       '@types/node': 18.7.1
       '@types/supertest': ^2.0.12
       '@types/web-push': ^3.3.2
@@ -279,7 +278,6 @@ importers:
       '@fastify/cors': 8.2.0
       '@fastify/middie': 8.1.0
       '@prisma/client': 4.10.1_prisma@4.10.1
-      '@tools/download-credentials': link:../../tools/download-credentials
       '@types/supertest': 2.0.12
       '@types/web-push': 3.3.2
       cors: 2.8.5
