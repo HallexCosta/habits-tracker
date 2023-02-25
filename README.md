@@ -25,6 +25,7 @@ or non-completed changing the colors tone acoordingly with progress of user.
 - [x] Authenticate with [Firebase](https://console.firebase.google.com) or [Nhost](https://nhost.io)
 - [x] Deploy API on [Render](https://render.com)
 - [x] Deploy Web on [Netlify](https://netlify.com), [Vercel](https://vercel.com) or [Render](https://render.com)
+- [x] Migrate of SQLite to PostgreSQL
 - [ ] Apply Clean Architecture on Frontend
 - [ ] Apply Clean Architecture on Backend
 
