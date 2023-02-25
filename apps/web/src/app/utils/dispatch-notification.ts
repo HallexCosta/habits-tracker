@@ -32,6 +32,8 @@ export async function dispatchNotification(
   serviceWorker: ServiceWorkerRegistration,
   token: string
 ) {
+  if (!Object.hasOwn(serviceWorker, 'pushManager')) return
+
   const options = {
     headers: {
       Authorization: `Bearer ${token}`,
