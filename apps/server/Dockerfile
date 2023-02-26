@@ -17,7 +17,7 @@ RUN pnpm --filter server exec prisma generate
 
 # COPY ./apps/server ./apps/server
 
-# EXPOSE 3333
-EXPOSE 80
+EXPOSE 3333
+# EXPOSE 80
 
 CMD pnpm --filter server dev
