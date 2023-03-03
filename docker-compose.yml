@@ -1,8 +1,25 @@
 version: '3.9'
 
 services:
-  server:
+  web:
+    container_name: web
     build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    ports:
+      - '3000:5173'
+    env_file:
+      - 'apps/web/.env'
+    volumes:
+      - ./apps/web/.env:/habits-tracker/apps/web/.env
+      - ./apps/web/:/habits-tracker/apps/web/
+      - ./node_modules/:/habita-tracker/node_modules
+    depends_on:
+      - server
+    #   - db
+  server:
+    container_name: server
+    build: 
       context: .
       dockerfile: ./apps/server/Dockerfile
     ports:
@@ -10,10 +27,11 @@ services:
     env_file:
       - 'apps/server/.env'
     volumes:
-      - ./apps/server/.env:/habits-tracker/server/.env
+      - ./apps/server/.env:/habits-tracker/apps/server/.env
+      - ./apps/server/:/habits-tracker/apps/server/
+      - ./node_modules/:/habita-tracker/node_modules
     depends_on:
-      - db
-
+       - db
   db:
     image: postgres:14.2-alpine
     restart: always
