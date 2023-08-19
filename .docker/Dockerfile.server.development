@@ -2,17 +2,21 @@ FROM node:18-alpine
 
 WORKDIR /habits-tracker
 
-ADD pnpm-workspace.yaml .
-ADD pnpm-lock.yaml .
-ADD package.json .
-ADD tsconfig.json .
-
-COPY ./apps/server ./habits-tracker/apps/server
-
 RUN npm i -g pnpm
-RUN pnpm -v
-RUN pnpm install
+
+ADD ./pnpm-workspace.yaml .
+ADD ./pnpm-lock.yaml .
+ADD ./package.json .
+ADD ./tsconfig.json .
+
+ADD ./apps/server ./apps/server
+
+RUN pnpm install 
+
+# RUN pnpm --filter server exec prisma generate
 
 # COPY ./apps/server ./apps/server
 
-CMD ["pnpm", "--filter", "server", "dev"]
+EXPOSE 3333
+
+CMD pnpm --filter server exec prisma generate && pnpm --filter server dev
