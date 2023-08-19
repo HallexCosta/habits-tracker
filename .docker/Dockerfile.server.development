@@ -13,10 +13,10 @@ ADD ./apps/server ./apps/server
 
 RUN pnpm install 
 
-RUN pnpm --filter server exec prisma generate
+# RUN pnpm --filter server exec prisma generate
 
 # COPY ./apps/server ./apps/server
 
 EXPOSE 3333
 
-CMD pnpm --filter server dev
+CMD pnpm --filter server exec prisma generate && pnpm --filter server dev
